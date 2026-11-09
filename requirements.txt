@@ -1,8 +1,11 @@
 torch
-transformers
-datasets
-evaluate
-jiwer
-librosa
-soundfile
+transformers>=4.46
+datasets>=3.0
 accelerate
+jiwer
+soundfile
+librosa
+pandas
+matplotlib
+gradio
+pytest
