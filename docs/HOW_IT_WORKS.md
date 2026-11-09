@@ -12,6 +12,7 @@ Here: Telugu speech in → Telugu text out.
 ## 2. The data: Google FLEURS (Telugu, `te_in`)
 
 - About 3,000 short clips of people reading Telugu sentences, each with the correct text.
+- Only **7.9 hours** of training audio, which is tiny compared with the 680,000 hours Whisper was first trained on.
 - Split into **train** (2,302), **validation** (311) and **test** (472).
   - **Train:** the model learns from these.
   - **Validation:** used during training to choose the best version of the model.
@@ -38,7 +39,7 @@ Whisper is a **transformer** model from OpenAI, trained on 680,000 hours of audi
 Models don't read letters; they read **tokens** (pieces of words). Whisper's tokenizer was built mostly from English, so:
 
 - English: one common word ≈ 1 token.
-- Telugu: one word can be **many** tokens, sometimes nearly one per byte.
+- Telugu: about **2 tokens per letter**. In notebook 01, the same sentence needed 13 tokens in English but 112 in Telugu.
 
 So a Telugu sentence is a much longer sequence for the decoder to write, which means more chances to make a mistake.
 
@@ -103,6 +104,7 @@ One number (WER) doesn't tell you *why* the model fails. Notebook 04 looks deepe
 - **Character confusions:** for example ి vs ీ (short vs long "i"), క vs ఖ (ka vs kha), త vs ట (dental vs retroflex t). These are sounds that are close in speech.
 - **Seen vs unseen words:** is the model worse on words it never saw in training?
 - **Length:** are longer clips harder?
+- **Male vs female voices:** 72% of the training clips are female voices. Is the model worse on male voices?
 - **Native-speaker labels:** I read the 40 worst sentences and labelled the main cause of each error (similar sounds, foreign names, English words, numbers, missing words, and so on). Only a Telugu speaker can do this well.
 
 ---
