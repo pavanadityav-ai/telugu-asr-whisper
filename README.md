@@ -7,7 +7,7 @@
 
 Fine-tuning OpenAI's Whisper to recognise **Telugu** speech, measuring how much it improves, and analysing the remaining errors as a native speaker.
 
-> **Status:** data exploration done ([notebook 01](notebooks/01_data_exploration.ipynb)); baseline and fine-tuning runs in progress. The results table is filled in only with numbers from real runs.
+> **Status:** data exploration ([notebook 01](notebooks/01_data_exploration.ipynb)) and baseline ([notebook 02](notebooks/02_baseline_whisper.ipynb)) done; fine-tuning in progress. The results table is filled in only with numbers from real runs.
 
 ## Why this project
 
@@ -65,10 +65,18 @@ Each notebook has an **Open in Colab** button at the top.
 
 | Model | WER ↓ | CER ↓ |
 |---|---|---|
-| whisper-small (no fine-tuning) | _pending_ | _pending_ |
+| whisper-small (no fine-tuning) | 155.6% | 163.9% |
 | whisper-small (fine-tuned) | _pending_ | _pending_ |
 
-Test set: FLEURS Telugu test split (472 clips). Lower is better.
+Test set: FLEURS Telugu test split (472 clips). Lower is better. Both baseline scores are above 100% because the model often repeats tokens in a loop, which adds many extra words and characters.
+
+### What the baseline gets wrong
+
+From [notebook 02](notebooks/02_baseline_whisper.ipynb):
+
+- **Wrong script:** only 6% of predictions are written in Telugu letters. Many are in Kannada or Hindi script, and some are close phonetic spellings of the Telugu sentence in Hindi letters, so the model hears Telugu better than it can write it.
+- **Repetition loops:** the decoder gets stuck repeating one token ("ಲಿಲಿಲಿ...", "11 11 11...") until the token limit. One long loop is a single wrong word but hundreds of wrong characters, which is why CER is higher than WER here.
+- **Translation instead of transcription:** some outputs are in English even though the task was set to Telugu transcription.
 
 ### Error analysis
 
