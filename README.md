@@ -7,14 +7,14 @@
 
 Fine-tuning OpenAI's Whisper to recognise **Telugu** speech, measuring how much it improves, and analysing the remaining errors as a native speaker.
 
-> **Status:** code complete; experiments in progress. The results table is filled in only with numbers from real runs.
+> **Status:** data exploration done ([notebook 01](notebooks/01_data_exploration.ipynb)); baseline and fine-tuning runs in progress. The results table is filled in only with numbers from real runs.
 
 ## Why this project
 
 Telugu has more than 80 million speakers, but speech recognition for it is far weaker than for English. Three things make it hard:
 
 1. **Little training data.** The public FLEURS set has only about 3,000 Telugu clips.
-2. **The tokenizer.** Whisper's tokenizer was built mostly from English text, so a Telugu sentence needs several times more tokens than the same sentence in English.
+2. **The tokenizer.** Whisper's tokenizer was built mostly from English text, so the same sentence needs about 9 times more tokens in Telugu than in English (112 vs 13).
 3. **Rich word forms.** Telugu attaches endings to words (నాయకత్వం → నాయకత్వంలో, "in the leadership"), so many test words never appear in training.
 
 ## Questions
@@ -22,6 +22,22 @@ Telugu has more than 80 million speakers, but speech recognition for it is far w
 1. How well does Whisper recognise Telugu **out of the box**?
 2. How much does **fine-tuning** on a small Telugu dataset help?
 3. **What kinds of mistakes** remain, and why?
+
+## The data at a glance
+
+Measured in [notebook 01](notebooks/01_data_exploration.ipynb):
+
+| Measure | Value |
+|---|---|
+| Training audio | 7.9 hours (2,302 clips) |
+| Validation / test audio | 0.9 hours (311 clips) / 1.5 hours (472 clips) |
+| Average clip | 12.4 seconds, 15.7 words |
+| Different words in training | 9,474 |
+| Test words never seen in training | 33% |
+| Tokens for the same sentence | 13 in English vs 112 in Telugu |
+| Training sentences over Whisper's 448-token limit | 21 (removed before training) |
+| Speakers (training) | 72% female, 28% male |
+| Training sentences containing English letters | 258 (11%) |
 
 ## Pipeline
 
@@ -40,7 +56,7 @@ flowchart LR
 | [01 Data exploration](notebooks/01_data_exploration.ipynb) | Hours of audio, clip lengths, speakers, vocabulary, tokens per sentence | CPU, ~5 min |
 | [02 Baseline](notebooks/02_baseline_whisper.ipynb) | Scores pre-trained `whisper-small` on the test set | T4 GPU, ~20 min |
 | [03 Fine-tuning](notebooks/03_finetune_whisper.ipynb) | Trains on 2,302 clips, keeps the best checkpoint by validation CER, scores on test | T4 GPU, ~1.5–2 h |
-| [04 Error analysis](notebooks/04_error_analysis.ipynb) | Baseline vs fine-tuned, character confusions, seen vs unseen words, native-speaker labels | CPU |
+| [04 Error analysis](notebooks/04_error_analysis.ipynb) | Baseline vs fine-tuned, character confusions, seen vs unseen words, male vs female voices, native-speaker labels | CPU |
 | [05 Demo](notebooks/05_demo.ipynb) | Web app: record Telugu speech, get Telugu text | GPU |
 
 Each notebook has an **Open in Colab** button at the top.
