@@ -7,7 +7,7 @@
 
 Fine-tuning OpenAI's Whisper to recognise **Telugu** speech, measuring how much it improves, and analysing the remaining errors as a native speaker.
 
-> **Status:** data exploration, baseline and fine-tuning done. Fine-tuning cut the test word error rate from **155.6% to 48.0%** and the character error rate from **163.9% to 13.7%**. Detailed error analysis (notebook 04) in progress. The results table is filled in only with numbers from real runs.
+> **Status:** data exploration, baseline and fine-tuning done. Fine-tuning cut the test word error rate from **155.6% to 48.0%** and the character error rate from **163.9% to 13.7%**. Error analysis over the whole test set done (below); native-speaker labelling of the worst errors in progress. All numbers come from real runs.
 
 ## Why this project
 
@@ -56,7 +56,7 @@ flowchart LR
 | [01 Data exploration](notebooks/01_data_exploration.ipynb) | Hours of audio, clip lengths, speakers, vocabulary, tokens per sentence | CPU, ~5 min |
 | [02 Baseline](notebooks/02_baseline_whisper.ipynb) | Scores pre-trained `whisper-small` on the test set | T4 GPU, ~20 min |
 | [03 Fine-tuning](notebooks/03_finetune_whisper.ipynb) ([Kaggle version](notebooks/03_finetune_whisper_kaggle.ipynb)) | Trains on 2,302 clips, keeps the best checkpoint by validation CER, scores on test | T4 GPU, ~1.5–2 h |
-| [04 Error analysis](notebooks/04_error_analysis.ipynb) | Baseline vs fine-tuned, character confusions, seen vs unseen words, male vs female voices, native-speaker labels | CPU |
+| [04 Error analysis](notebooks/04_error_analysis.ipynb) ([Kaggle version](notebooks/04_error_analysis_kaggle.ipynb)) | Baseline vs fine-tuned, character confusions, seen vs unseen words, male vs female voices, native-speaker labels | CPU (Kaggle version: T4 GPU, ~6 min) |
 | [05 Demo](notebooks/05_demo.ipynb) | Web app: record Telugu speech, get Telugu text | GPU |
 
 Each notebook has an **Open in Colab** button at the top.
@@ -94,7 +94,21 @@ Trained on a free Kaggle T4 GPU with the [Kaggle version of notebook 03](noteboo
 
 ### Error analysis
 
-_Notebook 04 (in progress) measures these errors across the whole test set: top character confusions, seen vs unseen words, male vs female voices, and native-speaker error categories._
+All 472 test sentences, baseline vs fine-tuned ([Kaggle version of notebook 04](notebooks/04_error_analysis_kaggle.ipynb); the re-created baseline gave exactly the same scores, 155.6% / 163.9%).
+
+- **Every sentence improved.** The character error rate went down for all 472 test sentences; none stayed the same or got worse.
+- **Wrong script is fixed.** 94% of the baseline's outputs were mostly not in Telugu script; after fine-tuning, 0%.
+- **Short clips were the baseline's worst case, not the fine-tuned model's.** Baseline CER on the shortest quarter of clips was 263% (repetition loops); the fine-tuned model stays between 12% and 15% for every clip length.
+- **New word forms are the main remaining problem.** A third of the test words (2,615 of 7,894) never appear in the training text. The fine-tuned model gets 63.8% of seen words exactly right, but only 36.3% of unseen ones. Telugu builds long words from many parts, so a small training set cannot cover them, which also explains why WER (48%) stays much higher than CER (13.7%).
+- **Most character errors are small marks.** The most common mistakes are a missing or extra virama ్ (340 deletions, 205 insertions) and missing vowel signs ా, ు, ి. The most common swap is long ీ written as short ి (67 times), and the reverse (60 times): vowel length, as seen in the examples above.
+- **No disadvantage for male voices**, although 72% of training clips are female. The test set is mostly male (357 of 472 clips), and the fine-tuned CER is 13.6% for male and 13.9% for female speakers (WER 46.3% vs 52.9%).
+
+| Word type | Words in test set | Recognised exactly: baseline | Recognised exactly: fine-tuned |
+|---|---|---|---|
+| Seen in training | 5,279 | 0.1% | 63.8% |
+| Never seen in training | 2,615 | 0.2% | 36.3% |
+
+Next step: labelling the 40 worst sentences by error type as a native speaker (notebook 04, section 8).
 
 ## Design choices
 
@@ -128,7 +142,7 @@ python -m pytest -q
 
 ## How it was built
 
-I used **Claude (Anthropic) as an AI coding assistant** to help design the pipeline and write the code. [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) explains every part in plain English. I run the experiments myself in Colab, and the error analysis and native-speaker labelling are my own work.
+I used **Claude (Anthropic) as an AI coding assistant** to help design the pipeline and write the code. [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) explains every part in plain English. The experiments run on my own Colab and Kaggle accounts, and the native-speaker labelling of errors is my own work.
 
 ## References
 
