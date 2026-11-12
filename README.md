@@ -94,7 +94,7 @@ Trained on a free Kaggle T4 GPU with the [Kaggle version of notebook 03](noteboo
 
 ### Error analysis
 
-All 472 test sentences, baseline vs fine-tuned ([Kaggle version of notebook 04](notebooks/04_error_analysis_kaggle.ipynb); the re-created baseline gave exactly the same scores, 155.6% / 163.9%).
+All 472 test sentences, baseline vs fine-tuned ([Kaggle version of notebook 04](notebooks/04_error_analysis_kaggle.ipynb), [run with all outputs on Kaggle](https://www.kaggle.com/code/pavan117/telugu-whisper-error-analysis); the re-created baseline gave exactly the same scores, 155.6% / 163.9%).
 
 - **Every sentence improved.** The character error rate went down for all 472 test sentences; none stayed the same or got worse.
 - **Wrong script is fixed.** 94% of the baseline's outputs were mostly not in Telugu script; after fine-tuning, 0%.
