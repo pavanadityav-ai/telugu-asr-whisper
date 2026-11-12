@@ -80,7 +80,7 @@ From [notebook 02](notebooks/02_baseline_whisper.ipynb):
 
 ### Fine-tuning run
 
-Trained on a free Kaggle T4 GPU with the [Kaggle version of notebook 03](notebooks/03_finetune_whisper_kaggle.ipynb): 2,280 of 2,302 training clips kept (22 were over 30 seconds or 448 tokens), 1,500 steps of 16 clips (about 10.5 passes over the data), 85 minutes of training.
+Trained on a free Kaggle T4 GPU with the [Kaggle version of notebook 03](notebooks/03_finetune_whisper_kaggle.ipynb) ([run with all outputs on Kaggle](https://www.kaggle.com/code/pavan117/telugu-whisper-fine-tuning)): 2,280 of 2,302 training clips kept (22 were over 30 seconds or 448 tokens), 1,500 steps of 16 clips (about 10.5 passes over the data), 85 minutes of training.
 
 | Step | Epoch | Validation loss | Validation WER | Validation CER |
 |---|---|---|---|---|
@@ -94,7 +94,7 @@ Trained on a free Kaggle T4 GPU with the [Kaggle version of notebook 03](noteboo
 
 ### Error analysis
 
-All 472 test sentences, baseline vs fine-tuned ([Kaggle version of notebook 04](notebooks/04_error_analysis_kaggle.ipynb), [run with all outputs on Kaggle](https://www.kaggle.com/code/pavan117/telugu-whisper-error-analysis); the re-created baseline gave exactly the same scores, 155.6% / 163.9%).
+All 472 test sentences, baseline vs fine-tuned ([Kaggle version of notebook 04](notebooks/04_error_analysis_kaggle.ipynb); the re-created baseline gave exactly the same scores, 155.6% / 163.9%).
 
 - **Every sentence improved.** The character error rate went down for all 472 test sentences; none stayed the same or got worse.
 - **Wrong script is fixed.** 94% of the baseline's outputs were mostly not in Telugu script; after fine-tuning, 0%.
